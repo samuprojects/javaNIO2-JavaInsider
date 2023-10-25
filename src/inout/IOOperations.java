@@ -1,10 +1,8 @@
 package inout;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.*;
 
+@SuppressWarnings("ALL")
 public class IOOperations { // classe utilizada para abstrair os códigos de leitura e escrita das aulas anteriores permitindo utilização mais genérica por outras classes
 
     public static void write(Writer out, String text) throws IOException {
@@ -31,5 +29,14 @@ public class IOOperations { // classe utilizada para abstrair os códigos de lei
         }
 
         return text.toString();
+    }
+
+    // Input e Output Stream trabalham com bytes por isso a sobrecarga dos métodos  read (recebe array) e write (escreve num array)
+    public static byte[] read(InputStream in) throws IOException{
+        return in.readAllBytes();
+    }
+
+    public static void write(OutputStream out, byte[] bytes) throws IOException {
+        out.write(bytes);
     }
 }
