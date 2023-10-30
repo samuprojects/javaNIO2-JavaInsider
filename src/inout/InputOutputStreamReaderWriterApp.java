@@ -2,6 +2,7 @@ package inout;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 public class InputOutputStreamReaderWriterApp {
 
@@ -11,25 +12,25 @@ public class InputOutputStreamReaderWriterApp {
 
     public static void main(String[] args) throws IOException {
 
-
-        /*Supondo que esse array de bytes representa um texto codificado em UTF-8 com origem externa qualquer e precisamos transformar isso num texto
-        * codificado em UTF-8 para ser lido dentro da aplicação.
-        * Para fazer a leitura, em texto, de dados que estão em bytes precisamos usar classes que tem o sufixo READER, porém para cumprir com o objetivo
-        * será necessário criar uma ponte entre o InputStream (que só possuem métodos que retornam bytes) e Reader (que trabalha com texto).
-        * Vamos utilizar um tipo especial de Reader chamado InputStreamReader passando a InputStream (que contém o array de bytes) e um segundo parâmetro,
-        * que é a codificação utilizada (necessária para decodificar o texto).
-        * Para facilitar e seguir um padrão de projeto (chamado Decorator) podemos utilizar as chamadas encadeadas conforme a seguir:
-        *
-        * usamos o BufferedReader para ler o texto passando a InputStreamReader que recebe o array de bytes + a codificação do texto, dentro do try-with-resources
-        * */
-
+        String text;
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(
                         new ByteArrayInputStream(BYTES)
                         , StandardCharsets.UTF_8
                 )
-        )){
-            System.out.println(reader.readLine()); // para ler uma linha completa
+        )){ // alterando para incluir a ponte (OutputStreamWriter) para gravar arquivos de saída
+            text = reader.readLine();
         }
+
+        System.out.println(text);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try (OutputStreamWriter out = new OutputStreamWriter(baos)){
+            out.write(text); // nesse cenário de saída não precisamos de um buffer, já escreve e fica salvo
+        }
+
+        byte[] bytes = baos.toByteArray();
+        System.out.println(Arrays.toString(BYTES));
+        System.out.println((Arrays.toString(bytes)));
     }
 }
